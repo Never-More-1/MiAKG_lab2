@@ -39,7 +39,7 @@ void draw(SDL_Surface *s, float a = 1, float x_move = 1, float y_move = 1)
 
   float t, x, y;
 
-  // clear_surface(s);
+  clear_surface(s);
 
   for (t = 0; t < 400; t++) {
     x = a * cos(t) * (1 + cos(t)) + 200 + x_move;
