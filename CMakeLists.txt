@@ -20,6 +20,9 @@ set_target_properties(external_all PROPERTIES EXCLUDE_FROM_ALL TRUE)
 
 ### SDL2
 set(SDL2_VERSION "2.26.5")
+set(SDL2_LIB_DIR D:/SDL2-devel-2.30.0-VC/SDL2-2.30.0/lib)
+set(SDL2_INCLUDE_DIR D:/SDL2-devel-2.30.0-VC/SDL2-2.30.0/include)
+set(SDL2_LIBRARY D:/SDL2-devel-2.30.0-VC/SDL2-2.30.0/bin)
 include(cmake-ext/SDL2-external.cmake)
 if(APPLE) # Apple OS X
   find_library(ObjC Objc)
@@ -41,7 +44,7 @@ if(APPLE) # Apple OS X
     )
 elseif(WIN32) #Windows
   set(SDL2_TARGET_LINK_LIBRARIES
-      SDL2-staticd SDL2maind
+      mingw32 SDL2main SDL2
       user32 gdi32 winmm imm32 ole32 oleaut32 version uuid advapi32 setupapi shell32 dinput8 )
 elseif(UNIX AND NOT APPLE) #Linux and etc.
   set(SDL2_TARGET_LINK_LIBRARIES pthread SDL2 dbus-1 dl )
