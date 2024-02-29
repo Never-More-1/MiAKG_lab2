@@ -60,24 +60,24 @@ for (int j = 0; j < SCREEN_HEIGHT; j++){
     y = (a / 2) * sin(g) + 200 + y_move; 
     put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(255, 0, 255));
   } 
-// 
-  // for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-  //   x = 2.5 * cos(i) + 200 + a/2 + x_move;
-  //   y = 2.5 * sin(i) + 200 - a/2 + y_move; 
-  //   put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  // } 
+// точки на окружности
+  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
+    x = 2.5 * cos(i) + 200 + a/2 + x_move;
+    y = 2.5 * sin(i) + 200 - a/2 + y_move; 
+    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
+  } 
 
-  // for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-  //   x = 2.5 * cos(i) + 200 + 2*a + x_move;
-  //   y = 2.5 * sin(i) + 200 + y_move; 
-  //   put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  // } 
-
-  // for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-  //   x = 2.5 * cos(i) + 200 + (3*a)/4 + x_move;
-  //   y = 2.5 * sin(i) + 200 + sqrt(3)*(3*a)/4 + y_move; 
-  //   put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  // }
+  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
+    x = 2.5 * cos(i) + 200 + 2*a + x_move;
+    y = 2.5 * sin(i) + 200 + y_move; 
+    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
+  } 
+// точки на функции
+  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
+    x = 2.5 * cos(i) + 200 + (3*a)/4 + x_move;
+    y = 2.5 * sin(i) + 200 + sqrt(3)*(3*a)/4 + y_move; 
+    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
+  }
 
   for (float i = 0; i < 2 * M_PI; i += 0.1) { 
     x = 2.5 * cos(i) + 200 + x_move;
