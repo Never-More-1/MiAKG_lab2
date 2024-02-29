@@ -78,11 +78,11 @@ int main(int argc, char *argv[])
             switch (e.key.keysym.scancode) {
             case SDL_SCANCODE_KP_PLUS:
               printf("SDL_SCANCODE_KP_PLUS have been presssed\n");
-              a++;
+              a += 3;
               break;
             case SDL_SCANCODE_KP_MINUS:
               printf("SDL_SCANCODE_KP_MINUS have been presssed\n");
-              a--;
+              a -= 3;
               break;
             case SDL_SCANCODE_RIGHT:
               printf("SDL_SCANCODE_RIGHT have been pressed\n");
