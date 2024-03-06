@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
       0x0000FF00,// G
       0x000000FF,// B
       0x00000000);// alpha
-    float a = 94;
+    float a = 74;
     float x_move = -200;
     float y_move = -200;
     gTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
@@ -84,21 +84,29 @@ int main(int argc, char *argv[])
               printf("SDL_SCANCODE_KP_MINUS have been presssed\n");
               a -= 3;
               break;
-            case SDL_SCANCODE_RIGHT:
+           case SDL_SCANCODE_RIGHT:
               printf("SDL_SCANCODE_RIGHT have been pressed\n");
-              x_move += 10;
+              if (x_move + 10 < -20) { 
+                x_move += 10;
+              }
               break;
             case SDL_SCANCODE_LEFT:
               printf("SDL_SCANCODE_LEFT have been pressed\n");
-              x_move -= 10;
+              if (x_move - 10 > -510) { 
+                x_move -= 10;
+              }
               break;
             case SDL_SCANCODE_UP:
               printf("SDL_SCANCODE_UP have been pressed\n");
-              y_move += 10;
+              if (y_move + 10 < 30) { 
+                y_move += 10;
+              }
               break;
             case SDL_SCANCODE_DOWN:
               printf("SDL_SCANCODE_DOWN have been pressed\n");
-              y_move -= 10;
+              if (y_move - 10 > -430) { 
+                y_move -= 10;
+              }
               break;
             case SDL_SCANCODE_ESCAPE:
               quit = true;

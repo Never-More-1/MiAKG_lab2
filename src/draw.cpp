@@ -7,9 +7,9 @@
 
 void put_pixel32(SDL_Surface *surface, int x, int y, Uint32 pixel)
 {
-  assert(NULL != surface);
-  assert(x < SCREEN_WIDTH);
-  assert(y < SCREEN_HEIGHT);
+  // assert(NULL != surface);
+  // assert(x < SCREEN_WIDTH);
+  // assert(y < SCREEN_HEIGHT);
 
   Uint32 *pixels = (Uint32 *)surface->pixels;
   pixels[(y * surface->w) + x] = pixel;
@@ -39,6 +39,8 @@ void draw(SDL_Surface *s, float a = 1, float x_move = 1, float y_move = 1)
 
   float t, x, y;
   clear_surface(s);
+  std::cout << x_move << 'x' << std::endl;
+  std::cout << y_move << 'y' << std::endl;
 // координатная ось
 for (int i = 0; i < SCREEN_WIDTH; i++){
   put_pixel32(s, i, SCREEN_HEIGHT/2, RGB32(255, 255, 255));
