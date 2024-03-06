@@ -61,6 +61,7 @@ int main(int argc, char *argv[])
     float a = 74;
     float x_move = -200;
     float y_move = -200;
+    double alpha = 0;
     gTexture = SDL_CreateTextureFromSurface(gRenderer, loadedSurface);
 
     if (NULL == gTexture) {
@@ -76,6 +77,14 @@ int main(int argc, char *argv[])
           }
           if (SDL_KEYDOWN == e.type) {
             switch (e.key.keysym.scancode) {
+              case SDL_SCANCODE_Q:
+              alpha -= 5;
+              SDL_FillRect(loadedSurface, NULL, 0x00FFFFFF);
+              break;
+            case SDL_SCANCODE_E:
+              alpha += 5;
+              SDL_FillRect(loadedSurface, NULL, 0x00FFFFFF);
+              break;
             case SDL_SCANCODE_KP_PLUS:
               printf("SDL_SCANCODE_KP_PLUS have been presssed\n");
               a += 3;
@@ -118,7 +127,7 @@ int main(int argc, char *argv[])
         }
         SDL_RenderClear(gRenderer);
 
-        draw(loadedSurface, a, x_move, y_move);
+        draw(loadedSurface, a, x_move, y_move, alpha * 3.14 / 180);
 
         SDL_UpdateTexture(gTexture, NULL, loadedSurface->pixels, loadedSurface->pitch);
         SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
