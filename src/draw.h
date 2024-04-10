@@ -6,6 +6,6 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 640;
 
-void draw(SDL_Surface *s, float a, float x_move, float y_move, double alpha);
+void draw(SDL_Surface *s, float a, float b, float x_move, float y_move, float alpha);
 
-int my_put_pixel(int x, int y, double alpha);
+void affine_transform(float *x, float *y, float x_move, float y_move, float alpha);

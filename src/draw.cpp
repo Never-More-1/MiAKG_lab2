@@ -15,10 +15,11 @@ void put_pixel32(SDL_Surface *surface, int x, int y, Uint32 pixel)
   pixels[(y * surface->w) + x] = pixel;
 }
 
-void clear_surface(SDL_Surface * s) {
+void clear_surface(SDL_Surface *s)
+{
   for (int x = 1; x < SCREEN_WIDTH; x++)
-    for(int y = 1; y < SCREEN_HEIGHT; y++)
-      put_pixel32(s,x,y,RGB32(0,0,0));
+    for (int y = 1; y < SCREEN_HEIGHT; y++)
+      put_pixel32(s, x, y, RGB32(0, 0, 0));
 }
 
 Uint32 get_pixel32(SDL_Surface *surface, int x, int y)
@@ -31,131 +32,53 @@ Uint32 get_pixel32(SDL_Surface *surface, int x, int y)
   return pixels[(y * surface->w) + x];
 }
 
-int my_put_pixel(int x, int y, double alpha)
+void affine_transform(float *x, float *y, float x_move, float y_move, float alpha)
 {
-  x = (int)(x * cos(alpha) - y * sin(alpha));
-  y = (int)(x * sin(alpha) + y * cos(alpha));
-  return x, y;
+  float rotate_x = (*x) * cos(alpha) + (*y) * sin(alpha);
+  float rotate_y = -(*x) * sin(alpha) + (*y) * cos(alpha);
+  *x = rotate_x;
+  *y = rotate_y;
+  *x += x_move;
+  *y += y_move;
 }
 
-void draw(SDL_Surface *s, float a = 1, float x_move = 1, float y_move = 1, double alpha = 0.0)
+void draw(SDL_Surface *s, float a, float b, float x_move, float y_move, float alpha)
 {
   glm::vec4 Position = glm::vec4(glm::vec3(0.0f), 1.0f);
-  glm::mat4 Model = glm::translate(    glm::mat4(1.0f), glm::vec3(1.0f));
+  glm::mat4 Model = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f));
   glm::vec4 Transformed = Model * Position;
+  // Оси координат
+  for (int i = 0; i < SCREEN_WIDTH; i++)
+    put_pixel32(s, i, SCREEN_HEIGHT / 2, RGB32(255, 255, 255));
 
-  float t, x, y;
-  clear_surface(s);
-
-  std::cout << x_move << 'x' << std::endl;
-  std::cout << y_move << 'y' << std::endl;
-
-// координатная ось
-for (int i = 0; i < SCREEN_WIDTH; i++){
-  put_pixel32(s, i, SCREEN_HEIGHT/2, RGB32(255, 255, 255));
+  for (int j = 0; j < SCREEN_HEIGHT; j++)
+    put_pixel32(s, SCREEN_WIDTH / 2, j, RGB32(255, 255, 255));
+// Окружность
+for (float phi = 0; phi < 2 * M_PI; phi += 0.01) {
+  float x = SCREEN_WIDTH / 2 + b * cos(phi); 
+  float y = SCREEN_HEIGHT / 2 + b * sin(phi); 
+  float center_x = x - SCREEN_WIDTH / 2;
+  float center_y = y - SCREEN_HEIGHT / 2; 
+  float rotate_x = center_x * cos(alpha) - center_y * sin(alpha) + SCREEN_WIDTH / 2;
+  float rotate_y = center_x * sin(alpha) + center_y * cos(alpha) + SCREEN_HEIGHT / 2;
+  rotate_x += x_move;
+  rotate_y += y_move;
+  put_pixel32(s, rotate_x, rotate_y, RGB32(255, 255, 0));
 }
-
-for (int j = 0; j < SCREEN_HEIGHT; j++){
-  put_pixel32(s, SCREEN_WIDTH/2, j, RGB32(255, 255, 255));
-}
-// основная функция
-  for (float t = 0; t < 2 * M_PI; t += 0.001) {
-    float x = a * cos(t) * (1 + cos(t));
-    float y = a * sin(t) * (1 + cos(t));
+  // Эпициклоида
+  for (float phi = -50; phi < 50; phi += 0.01) {
+    float x = (a + b) * cos(phi) - a * cos(((a + b) * phi) / a);
+    float y = (a + b) * sin(phi) - a * sin(((a + b) * phi) / a);
+    int pointX = round(x);
+    pointX += SCREEN_WIDTH / 2 + x_move;
+    int pointY = round(y);
+    pointY += SCREEN_HEIGHT / 2 + y_move;
     float rotate_x = x * cos(alpha) + y * sin(alpha);
     float rotate_y = -x * sin(alpha) + y * cos(alpha);
     x = rotate_x;
     y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
     x += x_move;
     y += y_move;
-    put_pixel32(s, x + SCREEN_WIDTH / 2, y + SCREEN_HEIGHT / 2, RGB32(255, 105, 108));
-  }
-// невидимая окружность
-  for (float g = 0; g < 2 * M_PI; g += 0.1) { 
-    x = (a / 2) * cos(g) + a/2;
-    y = (a / 2) * sin(g);
-    float rotate_x = x * cos(alpha) + y * sin(alpha);
-    float rotate_y = -x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y += y_move;
-    put_pixel32(s, x + SCREEN_WIDTH / 2, y + SCREEN_HEIGHT / 2, RGB32(255,0, 255));
-  } 
-
-// точки на окружности
-  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-    x = 2.5 * cos(i) + a/2;
-    y = 2.5 * sin(i) + a/2;
-    float rotate_x = x * cos(alpha) - y * sin(alpha);
-    float rotate_y = x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y -= y_move;
-    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  } 
-
-  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-    x = 2.5 * cos(i) + 2*a;
-    y = 2.5 * sin(i);
-    float rotate_x = x * cos(alpha) - y * sin(alpha);
-    float rotate_y = x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y -= y_move;
-    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  } 
-
-  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-    x = 2.5 * cos(i);
-    y = 2.5 * sin(i);
-    float rotate_x = x * cos(alpha) - y * sin(alpha);
-    float rotate_y = x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y -= y_move;
-    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  } 
-
-// точки на функции
-  for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-    x = 2.5 * cos(i) + (3*a)/4;
-    y = 2.5 * sin(i) + sqrt(3)*(3*a)/4;
-    float rotate_x = x * cos(alpha) - y * sin(alpha);
-    float rotate_y = x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y -= y_move;
-    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
-  }
-
-   for (float i = 0; i < 2 * M_PI; i += 0.1) { 
-    x = 2.5 * cos(i) + (3*a)/4;
-    y = 2.5 * sin(i) + sqrt(3)*(-1)*(3*a)/4;
-    float rotate_x = x * cos(alpha) - y * sin(alpha);
-    float rotate_y = x * sin(alpha) + y * cos(alpha);
-    x = rotate_x;
-    y = rotate_y;
-    //        new_x *= scale;
-    //        new_y *= scale;
-    x += x_move;
-    y -= y_move;
-    put_pixel32(s, x + SCREEN_WIDTH/2, SCREEN_HEIGHT/2 - y, RGB32(0, 255, 0));
+    put_pixel32(s, x + SCREEN_WIDTH / 2, y + SCREEN_HEIGHT / 2, RGB32(255, 0, 255));
   }
 }
